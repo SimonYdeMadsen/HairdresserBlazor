@@ -1,0 +1,65 @@
+using BlazorDbAccess.Areas.Identity;
+using BlazorDbAccess.Data;
+using BlazorDbAccess.DataRepositories;
+using BlazorDbAccess.DataRepositories.Contracts;
+using BlazorDbAccess.Entities;
+using BlazorDbAccess.Services;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContextFactory<SalonDbContext>(options =>
+{
+	options.UseSqlServer(connectionString);
+	options.EnableSensitiveDataLogging();
+	options.EnableDetailedErrors();
+});
+
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddDefaultIdentity<User>()
+	.AddEntityFrameworkStores<SalonDbContext>();
+
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
+
+builder.Services.AddScoped<IUserRepository, Repository>();
+builder.Services.AddScoped<IHairdresserRepository, Repository>();
+builder.Services.AddScoped<IAppointmentRepository, Repository>();
+builder.Services.AddScoped<DateStateContainer>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+	app.UseMigrationsEndPoint();
+}
+else
+{
+	app.UseExceptionHandler("/Error");
+}
+
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
+
+app.Run();
+
+// Maybe watch more of Tim Corey
+// Maybe watch Blazor TDD https://www.youtube.com/watch?v=37r7l0wxOq4&list=PLQB-TSatJvw632cR-hAtL-MYXTEWwvUuk&index=5

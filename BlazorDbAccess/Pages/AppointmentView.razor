@@ -1,0 +1,67 @@
+﻿@page "/calendar/appointment/{hairdresserId:int}"
+@implements IDisposable
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> manager
+@* This could be a popup/toast instead. *@
+
+
+
+<h1>Confirm Appointment</h1>
+
+<h3>@StateContainer.Date</h3>
+
+<button @onclick="AcceptAppointment">Confirm</button>
+
+
+
+
+
+
+@code {
+	[Parameter]
+	public int hairdresserId { get; set; }
+
+	[Inject]
+	public IAppointmentRepository AppointmentRepository { get; set; }
+
+	[Inject]
+	public DateStateContainer StateContainer { get; set; }
+
+	[Inject]
+	public AuthenticationStateProvider UserProvider { get; set; }
+
+
+
+	protected override Task OnInitializedAsync()
+	{
+
+		// Subscribe to event, note the lack of parentheses.
+		StateContainer.OnDateChosen += StateHasChanged;
+
+		return base.OnInitializedAsync();
+	}
+
+	private async void AcceptAppointment()
+	{
+		var userId = await GetUserId();
+		var startDate = StateContainer.Date;
+
+		var response = await AppointmentRepository
+			.AddAppointment(userId, this.hairdresserId, startDate, startDate.AddMinutes(30));
+	}
+
+	public void Dispose()
+	{
+		// To avoid memory leak, unsubscribe on disposal. 
+		StateContainer.OnDateChosen -= StateHasChanged;
+	}
+
+	public async Task<int> GetUserId()
+	{
+		var result = await UserProvider.GetAuthenticationStateAsync();
+		var user = result.User;
+		var id = int.Parse(manager.GetUserId(user));
+		return id;
+	}
+	
+}

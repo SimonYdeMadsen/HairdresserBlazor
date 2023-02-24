@@ -1,0 +1,141 @@
+﻿@implements IDisposable
+@if (hairdresserAppointments == null)
+{
+		<LoadingHandler/>
+}
+else
+{
+	<h3>Calendar of hairdresser @hairdresserId</h3>
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col" style="text-align:left">
+				<button @onclick="() => IncreaseDateByWeeks(-1)">Previous Week</button>
+			</div>
+			<div class="col">
+				@{string weekAttachment = "";}
+				@if (IsCurrentWeek(Date))
+				{
+					weekAttachment = "(Current)";
+				}
+				<h2 style="text-align:center">Week @CalendarUtility.GetWeekNumber(Date) @weekAttachment</h2>
+				
+			</div>
+			<div class="col" style="text-align:right">
+				<button @onclick="() => IncreaseDateByWeeks(1)">Next Week</button>
+			</div>
+		</div>
+
+		<div class="row">
+		@for (int i = 0; i < 7; i++)
+		{
+			<div class="col">
+				<h3 style="text-align:center">@GetDayFromInt(i)</h3>
+			</div>
+		}
+		</div>
+
+		<div class="row">
+		@for (DateTime day = startDate; day <= endDate; day = day.AddDays(1))
+		{
+			<div class="col">
+			@for (DateTime d = day.AddHours(8); d < day.AddHours(16); d = d.AddMinutes(30))
+			{
+				var _date = d; @* Local copy needed for Lambda-expression to work. *@
+				@if (NoAppointmentExists(_date))
+				{
+					<a href="calendar/appointment/@hairdresserId" @onclick="() => StateContainer.Date = _date">
+						<div style="text-align:center">@_date.ToString("HH:mm")</div>
+					</a>
+				}
+				else
+				{
+					<div>&nbsp;</div>
+				}
+			}
+			</div>
+		}
+		</div>
+		
+	</div>
+
+	<h3>User chose @StateContainer.Date </h3>
+
+
+	<div>
+	<h2>Here's the data:</h2>
+	@foreach (var ap in hairdresserAppointments)
+	{
+		<div>
+			@{var duration = ap.EndTime - ap.StartTime;}
+			<h3>User-@ap.UserId on @ap.StartTime lasting @duration.TotalMinutes minutes.</h3>
+		</div>
+	}
+	</div>
+}
+
+
+@code {
+	[Parameter]
+	public int hairdresserId { get; set; }
+
+	[Parameter]
+	public DateTime Date { get; set; }
+
+	[Inject]
+	public DateStateContainer StateContainer { get; set; }
+
+	[Inject]
+	public IAppointmentRepository AppointmentRepository { get; set; }
+
+	private List<Appointment> hairdresserAppointments;
+
+	private DateTime startDate;
+
+	private DateTime endDate;
+
+	private List<DateTime> timeslotList = new List<DateTime>();
+
+
+
+	protected async override Task OnInitializedAsync()
+	{
+		Console.WriteLine("Initialized Calendar.");
+
+		await InitializeFields();
+
+		StateContainer.OnDateChosen += StateHasChanged;
+	}
+
+	private async Task InitializeFields()
+	{
+		startDate = CalendarUtility.GetNormalizedWeekStartDate(this.Date);
+		endDate = startDate.AddDays(6);
+
+		this.hairdresserAppointments = await this.AppointmentRepository
+			.GetWeeklyHairdresserAppointments(this.Date, this.hairdresserId);
+	}
+
+	private DayOfWeek GetDayFromInt(int i)
+	{
+		i = (i + 1) % 7;
+		return (DayOfWeek)i;
+	}
+
+	private bool NoAppointmentExists(DateTime time) => hairdresserAppointments.Find(a => a.StartTime == time) == null;
+
+	private bool IsCurrentWeek(DateTime date) => CalendarUtility.GetWeekNumber(Date) == CalendarUtility.GetWeekNumber(DateTime.Today);
+
+	private async Task IncreaseDateByWeeks(int weekOffset)
+	{
+		Date = Date.AddDays(7 * weekOffset);
+		await InitializeFields();
+	}
+
+
+	public void Dispose()
+	{
+		StateContainer.OnDateChosen -= StateHasChanged;
+	}
+}

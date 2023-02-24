@@ -1,0 +1,1 @@
+﻿The client now wants users to be able to book 1-hour appointments separately. (Need to eliminate 30minute-only slots)
