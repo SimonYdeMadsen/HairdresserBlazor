@@ -1,0 +1,193 @@
+﻿@implements IDisposable
+@if (hairdresserAppointments == null)
+{
+		<LoadingHandler/>
+}
+else
+{
+	<h3>Calendar of hairdresser @HairdresserId</h3>
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col" style="text-align:left">
+				<button @onclick="() => IncreaseDateByWeeks(-1)">Previous Week</button>
+			</div>
+			<div class="col">
+				@{string weekAttachment = "";}
+				@if (IsCurrentWeek(Date))
+				{
+					weekAttachment = "(Current)";
+				}
+				<h2 style="text-align:center">Week @CalendarUtility.GetWeekNumber(Date) @weekAttachment</h2>
+				
+			</div>
+			<div class="col" style="text-align:right">
+				<button @onclick="() => IncreaseDateByWeeks(1)">Next Week</button>
+			</div>
+		</div>
+
+		@{var days = availableTimeslots.GroupBy(d => d.DayOfWeek);}
+		<div class="row">
+		@foreach (var day in days)
+			{
+				<div class="col">
+					<h3 style="text-align:center">@day.Key</h3>
+				</div>
+			}
+		</div>
+
+		<div class="row">
+
+		
+		@foreach (var day in days)
+		{
+			<div class="col">
+			@{TimeSpan voidTracker = startOfDay;}
+			@foreach (var date in day)
+			{
+				while (date.TimeOfDay > voidTracker)
+				{
+					<div>&nbsp;</div>
+					voidTracker = voidTracker.Add(new(0, timeslotIncrements, 0));
+				}
+				voidTracker = voidTracker.Add(new(0, timeslotIncrements, 0));
+				<a href="calendar/appointment/@HairdresserId/@DurationInMinutes" @onclick="() => StateContainer.Date = date">
+					<div style="text-align:center">@date.ToString("HH:mm")</div>
+				</a>
+			}
+			</div>
+			
+		}
+		
+		</div>
+		
+	</div>
+
+	
+	
+	
+
+	<h3>User chose @StateContainer.Date </h3>
+	<h3>Current duration: @DurationInMinutes</h3>
+
+	<div>
+	<h2>Here's the data:</h2>
+	@foreach (var ap in hairdresserAppointments)
+	{
+		<div>
+			@{var duration = ap.EndTime - ap.StartTime;}
+			<h3>User-@ap.UserId on @ap.StartTime.DayOfWeek (@ap.StartTime	) lasting @duration.TotalMinutes minutes.</h3>
+		</div>
+	}
+	</div>
+}
+
+
+@code {
+	[Parameter]
+	public int HairdresserId { get; set; }
+
+	[Parameter]
+	public DateTime Date { get; set; }
+
+	[Parameter]
+	public int DurationInMinutes { get; set; }
+
+	[Inject]
+	public DateStateContainer StateContainer { get; set; }
+
+	[Inject]
+	public IAppointmentRepository AppointmentRepository { get; set; }
+
+	private List<Appointment> hairdresserAppointments;
+
+	private DateTime startDate;
+
+	private DateTime endDate;
+
+	private HashSet<DateTime> availableTimeslots;
+
+	private int timeslotIncrements = 20;
+
+	private TimeSpan startOfDay = new(8, 0, 0);
+
+	protected async override Task OnInitializedAsync()
+	{
+
+		await InitializeFields();
+
+		StateContainer.OnDateChosen += StateHasChanged;
+	}
+
+	private async Task InitializeFields()
+	{
+		startDate = CalendarUtility.GetNormalizedWeekStartDate(this.Date);
+		endDate = startDate.AddDays(6);
+
+		this.hairdresserAppointments = await this.AppointmentRepository
+			.GetWeeklyHairdresserAppointments(this.Date, this.HairdresserId);
+
+		this.availableTimeslots = GenerateTimeslots(startDate, endDate, DurationInMinutes);
+	}
+
+
+	private HashSet<DateTime> GenerateAllTimeslots(HashSet<DateTime> availableTimes, int duration)
+	{
+		for (DateTime day = startDate; day <= endDate; day = day.AddDays(1))
+		{
+			for (DateTime d = day.AddHours(8); d < day.AddHours(16); d = d.AddMinutes(this.timeslotIncrements))
+			{
+				availableTimes.Add(d);
+			}
+		}
+		return availableTimes;
+	}
+
+	private HashSet<DateTime> FilterUnavailableSlots(HashSet<DateTime> availableTimes, int duration)
+	{
+		int durationIncrement = 10;
+
+		foreach (var a in hairdresserAppointments)
+		{
+			int appDuration = (int)(a.EndTime - a.StartTime).TotalMinutes;
+			for (DateTime i = a.StartTime.AddMinutes(-duration+durationIncrement); i < a.StartTime.AddMinutes(appDuration); i = i.AddMinutes(durationIncrement))
+			{
+				var status = availableTimes.Remove(i);
+			}
+		}
+		return availableTimes;
+	}
+
+
+	private HashSet<DateTime> GenerateTimeslots(DateTime startDate, DateTime endDate, int duration)
+	{
+		HashSet<DateTime> availableTimes = new();
+		List<DateTime> itemsToRemove = new();
+
+
+		availableTimes = GenerateAllTimeslots(availableTimes, duration);
+
+		availableTimes = FilterUnavailableSlots(availableTimes, duration);
+
+		return availableTimes;
+	}
+
+	
+
+	private bool IsCurrentWeek(DateTime date){
+		return CalendarUtility.GetWeekNumber(Date) == CalendarUtility.GetWeekNumber(DateTime.Today);
+	}
+
+	private async Task IncreaseDateByWeeks(int weekOffset)
+	{
+		Date = Date.AddDays(7 * weekOffset);
+		await InitializeFields();
+	}
+
+
+	public void Dispose()
+	{
+		StateContainer.OnDateChosen -= StateHasChanged;
+	}
+}

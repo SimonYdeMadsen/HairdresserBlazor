@@ -1,0 +1,17 @@
+﻿Client now wants...
+- users need to be able to book 1-hour appointments separately. 
+- users to be able to specify the type of appointment they're making, eg hair-colouring.
+- users to not be able to book appointments in the past. 
+
+
+Client found bugs...
+- If someone booked a 40-minute appointment at 08:00, others can book a 20-minute appointment starting at 08:20.
+	(Could make 40=20+20, but that could be problematic when displaying user-appointments.)
+	Better approach: 
+		- Make a list of all possible appointments. Count: 3*8*7=175-7=168
+		- Remove from this list, filtering based on appointments 'a'. 
+			Each 'a' has its own duration. 
+		- Filter duration of Appointment in question. 
+		- Use a HashSet
+
+
