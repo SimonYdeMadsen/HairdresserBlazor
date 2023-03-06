@@ -79,8 +79,7 @@ namespace HairdresserBlazor.DataRepositories
 				.Where(a => a.UserId == userId)
 				.ToListAsync();
 			return userAppointments;
-
-
+			
 		}
 
 		public async Task<Appointment> AddAppointment(int userId, int hairdresserId,
@@ -99,10 +98,11 @@ namespace HairdresserBlazor.DataRepositories
 					StartTime = startTime,
 					EndTime = endTime
 				});
+            await dbContext.SaveChangesAsync();
 
-			await dbContext.SaveChangesAsync();
+            var appointment = result.Entity;
 
-			return result.Entity;
+			return appointment;
 		}
 
 		public async Task<IEnumerable<Appointment>> GetWeeklyAppointments(DateTime date)

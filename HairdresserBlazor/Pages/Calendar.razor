@@ -7,19 +7,17 @@ else
 {
 	<h3>Calendar of hairdresser @HairdresserId</h3>
 
-
 	<div class="container">
 		<div class="row">
 			<div class="col" style="text-align:left">
 				<button @onclick="() => IncreaseDateByWeeks(-1)">Previous Week</button>
 			</div>
 			<div class="col">
-				@{string weekAttachment = "";}
-				@if (IsCurrentWeek(Date))
-				{
-					weekAttachment = "(Current)";
-				}
-				<h2 style="text-align:center">Week @CalendarUtility.GetWeekNumber(Date) @weekAttachment</h2>
+
+				@if (IsCurrentWeek(this.Date)) currentWeek = "(Current)";
+				else currentWeek = "";
+
+				<h2 style="text-align:center">Week @CalendarUtility.GetWeekNumber(this.Date) @currentWeek</h2>
 				
 			</div>
 			<div class="col" style="text-align:right">
@@ -30,18 +28,17 @@ else
 		@{var days = availableTimeslots.GroupBy(d => d.DayOfWeek);}
 		<div class="row">
 		@foreach (var day in days)
-			{
-				<div class="col">
-					<h3 style="text-align:center">@day.Key</h3>
-				</div>
-			}
+		{
+			<div class="col">
+				<h3 style="text-align:center; @GetTodayIndicator(day.Key)">@day.Key</h3>
+			</div>
+		}
 		</div>
 
 		<div class="row">
-
-		
 		@foreach (var day in days)
 		{
+
 			<div class="col">
 			@{TimeSpan voidTracker = startOfDay;}
 			@foreach (var date in day)
@@ -112,6 +109,8 @@ else
 
 	private TimeSpan startOfDay = new(8, 0, 0);
 
+	private string currentWeek = "(Current)";
+
 	protected async override Task OnInitializedAsync()
 	{
 
@@ -138,7 +137,7 @@ else
 		{
 			for (DateTime d = day.AddHours(8); d < day.AddHours(16); d = d.AddMinutes(this.timeslotIncrements))
 			{
-				availableTimes.Add(d);
+				if (d > DateTime.Now) availableTimes.Add(d);
 			}
 		}
 		return availableTimes;
@@ -150,8 +149,9 @@ else
 
 		foreach (var a in hairdresserAppointments)
 		{
+			int durationOffset = -duration + durationIncrement;
 			int appDuration = (int)(a.EndTime - a.StartTime).TotalMinutes;
-			for (DateTime i = a.StartTime.AddMinutes(-duration+durationIncrement); i < a.StartTime.AddMinutes(appDuration); i = i.AddMinutes(durationIncrement))
+			for (DateTime i = a.StartTime.AddMinutes(durationOffset); i < a.StartTime.AddMinutes(appDuration); i = i.AddMinutes(durationIncrement))
 			{
 				var status = availableTimes.Remove(i);
 			}
@@ -173,10 +173,22 @@ else
 		return availableTimes;
 	}
 
-	
+
 
 	private bool IsCurrentWeek(DateTime date){
-		return CalendarUtility.GetWeekNumber(Date) == CalendarUtility.GetWeekNumber(DateTime.Today);
+		return CalendarUtility.GetWeekNumber(date) == CalendarUtility.GetWeekNumber(DateTime.Today);
+	}
+
+	private string GetTodayIndicator(DayOfWeek day)
+	{
+		if (day == DateTime.Today.DayOfWeek && IsCurrentWeek(Date))
+		{
+			return "background-color: Blue";
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	private async Task IncreaseDateByWeeks(int weekOffset)
