@@ -1,0 +1,46 @@
+﻿
+
+@if (UserAppointments == null)
+{
+	<LoadingHandler/>
+}
+else
+{
+	<h3>You have the follow appointments:</h3>
+
+	<ul>
+	@foreach (var app in UserAppointments)
+	{
+		
+		var minutes = (app.EndTime - app.StartTime).TotalMinutes;
+		<li><p>On @app.StartTime.Date.ToString("d"), at @app.StartTime.TimeOfDay, lasting @minutes minutes.</p></li>
+	}
+	</ul>
+}
+
+
+
+
+
+
+
+@code {
+
+	private int userId;
+
+	private ICollection<Appointment> UserAppointments;
+
+	[Inject]
+	public IUserRepository UserRepository { get; set; }
+
+	[Inject]
+	public IUserHandler UserHandler { get; set; }
+
+	protected async override Task OnInitializedAsync()
+	{
+		userId = await UserHandler.GetCurrentUserId();
+		Console.WriteLine($"userId: {userId}");
+
+		UserAppointments = await UserRepository.GetUserAppointments(userId);
+	}
+}

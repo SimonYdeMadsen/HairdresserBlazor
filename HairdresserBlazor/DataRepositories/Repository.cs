@@ -78,16 +78,8 @@ namespace HairdresserBlazor.DataRepositories
 			var userAppointments = await dbContext.Appointments
 				.Where(a => a.UserId == userId)
 				.ToListAsync();
-
-			//var user = await dbContext.Users.FindAsync(userId);
-			//if (user == null)
-			//{
-			//	throw new Exception($"Could not find user with Id {userId}.");
-			//}
-
-			//return user.UserAppointments;
-
 			return userAppointments;
+
 
 		}
 
@@ -95,9 +87,7 @@ namespace HairdresserBlazor.DataRepositories
 													DateTime startTime, DateTime endTime)
 		{
 			// TODO: Check if duplicate.
-
 			// TODO: Implement initial constraints on the timeslot. Might be irrelevant due to client implementations. 
-
 			// TODO: Check if timeslot available. Could possibly be done on the client through display options.  
 
 			using var dbContext = DbFactory.CreateDbContext();
@@ -111,10 +101,6 @@ namespace HairdresserBlazor.DataRepositories
 				});
 
 			await dbContext.SaveChangesAsync();
-
-			var user = await dbContext.Users.FindAsync(userId);
-			user.UserAppointments.Add(result.Entity);
-
 
 			return result.Entity;
 		}

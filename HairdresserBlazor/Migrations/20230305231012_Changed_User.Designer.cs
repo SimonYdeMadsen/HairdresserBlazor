@@ -4,6 +4,7 @@ using HairdresserBlazor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HairdresserBlazor.Migrations
 {
     [DbContext(typeof(SalonDbContext))]
-    partial class SalonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230305231012_Changed_User")]
+    partial class Changed_User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,6 +46,8 @@ namespace HairdresserBlazor.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Appointments");
 
@@ -200,7 +205,7 @@ namespace HairdresserBlazor.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "330f4b2d-0ee9-499b-8548-6459f4719144",
+                            ConcurrencyStamp = "f7d67df5-e0b7-47b0-b48f-d52eac9ab871",
                             Email = "id0@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -212,7 +217,7 @@ namespace HairdresserBlazor.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "89f5c381-0b88-4cb4-9adb-5b6e8bf9ad13",
+                            ConcurrencyStamp = "c8d9840b-b745-471f-9078-4cc03a6b012f",
                             Email = "id1@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -224,7 +229,7 @@ namespace HairdresserBlazor.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2e6fd234-5387-4819-9dd9-d3aa5ed610ff",
+                            ConcurrencyStamp = "ffc78e43-d6b3-43e9-8d4d-72e6fbb92c8d",
                             Email = "id2@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -371,6 +376,15 @@ namespace HairdresserBlazor.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("HairdresserBlazor.Entities.Appointment", b =>
+                {
+                    b.HasOne("HairdresserBlazor.Entities.User", null)
+                        .WithMany("UserAppointments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("HairdresserBlazor.Entities.UserRole", null)
@@ -420,6 +434,11 @@ namespace HairdresserBlazor.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HairdresserBlazor.Entities.User", b =>
+                {
+                    b.Navigation("UserAppointments");
                 });
 #pragma warning restore 612, 618
         }

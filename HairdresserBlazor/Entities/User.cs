@@ -11,8 +11,6 @@ namespace HairdresserBlazor.Entities
 		}
 
 		public MembershipType Membership { get; set; }
-
-		public ICollection<Appointment> UserAppointments { get; set; }
 	}
 
 	public class UserRole : IdentityRole<int>

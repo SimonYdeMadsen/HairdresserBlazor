@@ -14,4 +14,3 @@ Client found bugs...
 		- Filter duration of Appointment in question. 
 		- Use a HashSet
 
-
