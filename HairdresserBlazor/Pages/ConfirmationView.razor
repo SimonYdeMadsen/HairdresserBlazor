@@ -1,10 +1,8 @@
 ﻿@page "/calendar/appointment/{hairdresserId:int}/{durationInMinutes:int}"
 @implements IDisposable
 @using Microsoft.AspNetCore.Identity
-@inject UserManager<User> manager
+
 @* This could be a popup/toast instead. *@
-
-
 
 <h1>Confirm Appointment</h1>
 
@@ -33,7 +31,11 @@
 	[Inject]
 	public IUserHandler UserHandler { get; set; }
 
+	[Inject]
+	public UserManager<User> manager { get; set; }
 
+	[Inject]
+	public NavigationManager Navigation { get; set; }
 
 	protected override Task OnInitializedAsync()
 	{
@@ -51,6 +53,8 @@
 
 		var response = await AppointmentRepository
 			.AddAppointment(userId, this.hairdresserId, startDate, startDate.AddMinutes(durationInMinutes));
+
+		Navigation.NavigateTo("/");
 	}
 
 
