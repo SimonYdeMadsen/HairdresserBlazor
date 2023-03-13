@@ -11,17 +11,15 @@ else
 	<ul>
 	@foreach (var app in UserAppointments)
 	{
+		if (app.StartTime > DateTime.Now)
+		{
+			var minutes = (app.EndTime - app.StartTime).TotalMinutes;
+			<li><p>On @app.StartTime.Date.ToString("d"), at @app.StartTime.TimeOfDay, lasting @minutes minutes.</p></li>
+		}
 		
-		var minutes = (app.EndTime - app.StartTime).TotalMinutes;
-		<li><p>On @app.StartTime.Date.ToString("d"), at @app.StartTime.TimeOfDay, lasting @minutes minutes.</p></li>
 	}
 	</ul>
 }
-
-
-
-
-
 
 
 @code {

@@ -2,7 +2,10 @@
 {
 	public class Hairdresser
 	{
-		public int Id { get; set; }
-		public string Name { get; set; }
+		public Hairdresser(string userName) : base(userName)
+		{
+		}
+
+		public double PayRate { get; set; }
 	}
 }

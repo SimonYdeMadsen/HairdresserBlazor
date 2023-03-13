@@ -1,4 +1,5 @@
 ﻿using HairdresserBlazor.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -124,7 +125,9 @@ namespace HairdresserBlazor.Data
 		}
 
 
-		public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
+
+
+		public async Task<int> SaveChangesAsync() => await base.SaveChangesAsync();
 
 
 	}

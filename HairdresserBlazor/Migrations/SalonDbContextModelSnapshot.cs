@@ -50,49 +50,49 @@ namespace HairdresserBlazor.Migrations
                         new
                         {
                             Id = 1,
-                            EndTime = new DateTime(2023, 3, 6, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 3, 13, 11, 0, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 2,
-                            StartTime = new DateTime(2023, 3, 6, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 3, 13, 10, 30, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
-                            EndTime = new DateTime(2023, 3, 6, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 3, 13, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 2,
-                            StartTime = new DateTime(2023, 3, 6, 11, 30, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 3, 13, 11, 30, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         },
                         new
                         {
                             Id = 3,
-                            EndTime = new DateTime(2023, 3, 6, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 3, 13, 11, 0, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 1,
-                            StartTime = new DateTime(2023, 3, 6, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 3, 13, 10, 30, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         },
                         new
                         {
                             Id = 4,
-                            EndTime = new DateTime(2023, 3, 6, 8, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 3, 13, 8, 30, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 1,
-                            StartTime = new DateTime(2023, 3, 6, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 3, 13, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 3
                         },
                         new
                         {
                             Id = 5,
-                            EndTime = new DateTime(2023, 4, 6, 8, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 4, 13, 8, 30, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 1,
-                            StartTime = new DateTime(2023, 4, 6, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 4, 13, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 3
                         },
                         new
                         {
                             Id = 6,
-                            EndTime = new DateTime(2023, 2, 6, 8, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 2, 13, 8, 30, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 1,
-                            StartTime = new DateTime(2023, 2, 6, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 2, 13, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 3
                         });
                 });

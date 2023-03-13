@@ -82,7 +82,7 @@ namespace HairdresserBlazor.DataRepositories
 			
 		}
 
-		public async Task<Appointment> AddAppointment(int userId, int hairdresserId,
+		public async Task AddAppointment(int userId, int hairdresserId,
 													DateTime startTime, DateTime endTime)
 		{
 			// TODO: Check if duplicate.
@@ -100,9 +100,8 @@ namespace HairdresserBlazor.DataRepositories
 				});
             await dbContext.SaveChangesAsync();
 
-            var appointment = result.Entity;
-
-			return appointment;
+			await dbContext.SaveChangesAsync();
+			//return result.Entity;
 		}
 
 		public async Task<IEnumerable<Appointment>> GetWeeklyAppointments(DateTime date)
