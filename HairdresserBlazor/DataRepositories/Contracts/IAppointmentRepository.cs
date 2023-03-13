@@ -9,6 +9,6 @@ namespace HairdresserBlazor.DataRepositories.Contracts
         Task<Appointment> GetAppointment(int appointmentId);
 		Task<IEnumerable<Appointment>> GetWeeklyAppointments(DateTime date);
 		Task<List<Appointment>> GetWeeklyHairdresserAppointments(DateTime date, int hairdresserId);
-
+		Task<ICollection<Appointment>> GetUserAppointments(int userId);
 	}
 }

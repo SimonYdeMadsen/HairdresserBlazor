@@ -1,0 +1,28 @@
+﻿
+<select @onchange="SetDuration">
+	<option value="" selected disabled hidden>Choose here</option>
+	<option value="20">Haircut: Man</option>
+	<option value="40">Haircut: Woman</option>
+	<option value="20">Color: Short</option>
+	<option value="40">Color: Long</option>
+</select>
+
+
+@code {
+	// For child->parent communication
+	[Parameter]
+	public EventCallback<int> OnDurationChosen { get; set; }
+
+	[Parameter]
+	public string HairdresserName { get; set; }
+
+	private int durationInMinutes;
+
+
+
+	private void SetDuration(ChangeEventArgs e)
+	{
+		durationInMinutes = Convert.ToInt32(e.Value);
+		OnDurationChosen.InvokeAsync(durationInMinutes);
+	}
+}

@@ -1,0 +1,92 @@
+﻿@page "/employee"
+@attribute [Authorize(Roles = "Admin,Employee")]
+
+@if (hairdressers == null)
+{
+	<LoadingHandler/>
+}
+else{
+<h3>EmployeeView</h3>
+
+<div class="row">
+	<div class="col-md-auto">
+		<p>UserName:</p>
+	</div>
+	<div class="col">
+		<input @bind="userName" type="text"/>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-auto">
+		<p>Hairdresser:</p>
+	</div>
+	<div class="col">
+		<select @bind="hairdresserId">
+			@foreach (var employee in hairdressers)
+			{
+				<option value="@employee.Id">@employee.UserName</option>
+			}
+			<button type="submit">Submit</button>
+		</select>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-auto">
+		<p>Service:</p>
+	</div>
+	<div class="col">
+		@if (!isDurationSet)
+		{
+		<DurationChoiceView OnDurationChosen="OnDurationChanged"/>
+		}
+		else
+		{
+			<Calendar Date="DateTime.Now" DurationInMinutes="durationInMinutes" HairdresserId="hairdresserId"/>
+		}
+	</div>
+</div>
+
+
+
+}
+@code {
+
+	private IEnumerable<Hairdresser> hairdressers;
+
+	[Inject]
+	public IHairdresserRepository HairdresserRepository { get; set; }
+
+	[Inject]
+	public IUserHandler UserHandler { get; set; }
+
+	[Inject]
+	public IAppointmentRepository AppointmentRepository { get; set; }
+
+	int hairdresserId;
+	string userName = "";
+	private int durationInMinutes;
+	DateTime startTime;
+	DateTime endTime;
+
+	private bool isDurationSet = false;
+
+	protected async override Task OnInitializedAsync()
+	{
+		this.hairdressers = await this.HairdresserRepository.GetHairdressers();
+		hairdresserId = await UserHandler.GetCurrentUserId();
+		
+	}
+
+	private async void CreateAppointment()
+	{
+		int userId = await UserHandler.CreateUserAsync(userName);
+		await AppointmentRepository.AddAppointment(userId, hairdresserId, startTime, endTime);
+	}
+
+	private void OnDurationChanged(int duration)
+	{
+		durationInMinutes = duration;
+		isDurationSet = true;
+	}
+}

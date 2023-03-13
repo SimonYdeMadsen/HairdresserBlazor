@@ -1,4 +1,5 @@
-﻿using HairdresserBlazor.Entities;
+﻿using Azure;
+using HairdresserBlazor.Entities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -26,6 +27,18 @@ namespace HairdresserBlazor.Services
 			var user = result.User;
 			var id = int.Parse(userManager.GetUserId(user));
 			return id;
+		}
+
+		public async Task<int> CreateUserAsync(string userName)
+		{
+			var user = new User(userName);
+
+			var status = await this.userManager.CreateAsync(user);
+			if (!status.Succeeded)
+			{
+				throw new RequestFailedException("No user was created.");
+			}
+			return user.Id;
 		}
 	}
 }

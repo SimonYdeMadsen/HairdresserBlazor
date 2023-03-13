@@ -7,52 +7,17 @@ using HairdresserBlazor.Utility;
 
 namespace HairdresserBlazor.DataRepositories
 {
-    public class Repository : IHairdresserRepository, IUserRepository, IAppointmentRepository
+    public class AppointmentRepository : IAppointmentRepository
 	{
 
 		private readonly IDbContextFactory<SalonDbContext> DbFactory;
 
-		public Repository(IDbContextFactory<SalonDbContext> dbFactory)
+		public AppointmentRepository(IDbContextFactory<SalonDbContext> dbFactory)
 		{
 			this.DbFactory = dbFactory;
 		}
 
-		public async Task<IEnumerable<Hairdresser>> GetHairdressers()
-		{
-			using var dbContext = DbFactory.CreateDbContext();
 
-			return await dbContext.Hairdressers
-				.ToListAsync();
-		}
-
-		public async Task<IEnumerable<int>> GetHairdresserIds() { 
-
-			var hairdressers = await GetHairdressers();
-			return hairdressers.Select(h => h.Id);
-		}
-
-		public async Task<Hairdresser> GetHairdresser(int hairdresserId)
-		{
-			using var dbContext = DbFactory.CreateDbContext();
-			return await dbContext.Hairdressers
-				.Where(h => h.Id == hairdresserId)
-				.SingleOrDefaultAsync();
-		}
-
-		public async Task<IEnumerable<User>> GetUsers()
-		{
-			using var dbContext = DbFactory.CreateDbContext();
-			return await dbContext.Users
-				.ToListAsync();
-		}
-
-		public async Task<User> GetUser(int userId)
-		{
-			using var dbContext = DbFactory.CreateDbContext();
-			return await dbContext.Users
-				.Where(u => u.Id == userId)
-				.FirstOrDefaultAsync();
-		}
 
 		public async Task<IEnumerable<Appointment>> GetHairdresserAppointments(int hairdresserId)
 		{
@@ -79,8 +44,6 @@ namespace HairdresserBlazor.DataRepositories
 				.Where(a => a.UserId == userId)
 				.ToListAsync();
 			return userAppointments;
-
-
 		}
 
 		public async Task<Appointment> AddAppointment(int userId, int hairdresserId,
@@ -128,6 +91,6 @@ namespace HairdresserBlazor.DataRepositories
 				.ToList();
 		}
 
-
+		
 	}
 }

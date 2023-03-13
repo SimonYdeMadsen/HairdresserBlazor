@@ -6,6 +6,6 @@ namespace HairdresserBlazor.DataRepositories.Contracts
     {
         Task<User> GetUser(int userId);
         Task<IEnumerable<User>> GetUsers();
-        Task<ICollection<Appointment>> GetUserAppointments(int userId);
+        
     }
 }

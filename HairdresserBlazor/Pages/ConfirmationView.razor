@@ -49,8 +49,10 @@
 		var userId = await UserHandler.GetCurrentUserId();
 		var startDate = StateContainer.Date;
 
-		var response = await AppointmentRepository
+		await AppointmentRepository
 			.AddAppointment(userId, this.hairdresserId, startDate, startDate.AddMinutes(durationInMinutes));
+
+		
 	}
 
 

@@ -32,9 +32,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
 
-builder.Services.AddScoped<IUserRepository, Repository>();
-builder.Services.AddScoped<IHairdresserRepository, Repository>();
-builder.Services.AddScoped<IAppointmentRepository, Repository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IHairdresserRepository, HairdresserRepository>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<DateStateContainer>();
 builder.Services.AddScoped<IUserHandler, UserHandler>();
 

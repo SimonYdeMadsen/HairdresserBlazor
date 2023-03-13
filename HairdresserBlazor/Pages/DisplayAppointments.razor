@@ -31,7 +31,7 @@ else
 	private ICollection<Appointment> UserAppointments;
 
 	[Inject]
-	public IUserRepository UserRepository { get; set; }
+	public IAppointmentRepository AppointmentRepository { get; set; }
 
 	[Inject]
 	public IUserHandler UserHandler { get; set; }
@@ -41,6 +41,6 @@ else
 		userId = await UserHandler.GetCurrentUserId();
 		Console.WriteLine($"userId: {userId}");
 
-		UserAppointments = await UserRepository.GetUserAppointments(userId);
+		UserAppointments = await AppointmentRepository.GetUserAppointments(userId);
 	}
 }

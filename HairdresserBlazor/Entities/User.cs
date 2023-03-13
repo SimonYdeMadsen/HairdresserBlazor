@@ -5,6 +5,11 @@ namespace HairdresserBlazor.Entities
 {
 	public class User : IdentityUser<int>
 	{
+		public User(string userName) : base()
+		{
+			base.UserName = userName;
+		}
+
 		public enum MembershipType {
 			Default,
 			Premium
