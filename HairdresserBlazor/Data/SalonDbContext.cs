@@ -18,7 +18,8 @@ namespace HairdresserBlazor.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
-
+			
+			/*
 			// Create User data. 
 			modelBuilder.Entity<User>().HasData(new User
 			{
@@ -51,8 +52,9 @@ namespace HairdresserBlazor.Data
 				Id = 2,
 				Name = "Yug Nolas"
 			});
+			*/
 
-
+			
 			// Create Appointment data
 			var today = DateTime.Today;
 			modelBuilder.Entity<Appointment>().HasData(new Appointment
@@ -81,7 +83,7 @@ namespace HairdresserBlazor.Data
 				UserId = 1,
 				HairdresserId = 1,
 				StartTime = new DateTime(today.Year, today.Month, today.Day,
-										10, 30, 0), /* Overlapping timeslot. */
+										10, 30, 0), 
 				EndTime = new DateTime(today.Year, today.Month, today.Day,
 										11, 00, 0)
 			});
@@ -91,7 +93,7 @@ namespace HairdresserBlazor.Data
 				UserId = 3,
 				HairdresserId = 1,
 				StartTime = new DateTime(today.Year, today.Month, today.Day,
-							8, 0, 0), /* Overlapping timeslot. */
+							8, 0, 0), 
 				EndTime = new DateTime(today.Year, today.Month, today.Day,
 							8, 30, 0)
 			});
@@ -103,7 +105,7 @@ namespace HairdresserBlazor.Data
 				UserId = 3,
 				HairdresserId = 1,
 				StartTime = new DateTime(date.Year, date.Month, date.Day,
-				8, 0, 0), /* Overlapping timeslot. */
+				8, 0, 0),
 				EndTime = new DateTime(date.Year, date.Month, date.Day,
 				8, 30, 0)
 			});
@@ -116,11 +118,11 @@ namespace HairdresserBlazor.Data
 				UserId = 3,
 				HairdresserId = 1,
 				StartTime = new DateTime(date.Year, date.Month, date.Day,
-				8, 0, 0), /* Overlapping timeslot. */
+				8, 0, 0), 
 				EndTime = new DateTime(date.Year, date.Month, date.Day,
 				8, 30, 0)
 			});
-
+			
 		}
 
 

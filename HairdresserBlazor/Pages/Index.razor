@@ -1,9 +1,48 @@
 ﻿@page "/"
 
 <PageTitle>Index</PageTitle>
-
 <h2>Welcome to my booking website.</h2>
 <br />
+
+@if (user is not null)
+{
+    @if (@user.IsInRole("Admin"))
+    {        
+        <h3>@user.Identity.Name</h3>
+        <div class="m-2 p-2">
+            Is Authenticated: @user.Identity.IsAuthenticated
+        </div>
+        <div class="m-2 p-2">
+            Authentication Type: @user.Identity.AuthenticationType
+        </div>
+        <div class="m-2 p-2">
+            Admin Role: @user.IsInRole("Admin")
+        </div>
+        <div class="m-2 p-2">
+            Employee Role: @user.IsInRole("Employee")
+        </div>
+        <div class="m-2 p-2">
+            Normal Role: @user.IsInRole("Normal")
+        </div>
+        <div class="m-2 p-2">
+            <h5>Claims</h5>
+            @foreach (var claim in user.Claims)
+            {
+                <span>
+                    @claim.Type
+                </span>
+                <span>:</span>
+                <span>
+                    @claim.Value
+                </span>
+                <br />
+            }
+        </div>
+    }
+}
+
+
+
 <AuthorizeView>
 	<NotAuthorized>
 		<p><a href="Identity/Account/Login">Sign in</a> to view your appointments.</p>
@@ -12,9 +51,20 @@
 	<Authorized>
 		<DisplayAppointments/>
 	</Authorized>
-	
 </AuthorizeView>
 
 
 
+@code{
+    [CascadingParameter] 
+    public Task<AuthenticationState> AuthTask { get; set; }
+
+    private System.Security.Claims.ClaimsPrincipal user;
+
+        protected async override Task OnInitializedAsync()
+        {
+            var authState = await AuthTask;
+            this.user = authState.User;
+        }
+}
 

@@ -50,78 +50,50 @@ namespace HairdresserBlazor.Migrations
                         new
                         {
                             Id = 1,
-                            EndTime = new DateTime(2023, 3, 6, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 3, 8, 11, 0, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 2,
-                            StartTime = new DateTime(2023, 3, 6, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 3, 8, 10, 30, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
-                            EndTime = new DateTime(2023, 3, 6, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 3, 8, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 2,
-                            StartTime = new DateTime(2023, 3, 6, 11, 30, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 3, 8, 11, 30, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         },
                         new
                         {
                             Id = 3,
-                            EndTime = new DateTime(2023, 3, 6, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 3, 8, 11, 0, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 1,
-                            StartTime = new DateTime(2023, 3, 6, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 3, 8, 10, 30, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         },
                         new
                         {
                             Id = 4,
-                            EndTime = new DateTime(2023, 3, 6, 8, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 3, 8, 8, 30, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 1,
-                            StartTime = new DateTime(2023, 3, 6, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 3, 8, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 3
                         },
                         new
                         {
                             Id = 5,
-                            EndTime = new DateTime(2023, 4, 6, 8, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 4, 8, 8, 30, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 1,
-                            StartTime = new DateTime(2023, 4, 6, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 4, 8, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 3
                         },
                         new
                         {
                             Id = 6,
-                            EndTime = new DateTime(2023, 2, 6, 8, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2023, 2, 8, 8, 30, 0, 0, DateTimeKind.Unspecified),
                             HairdresserId = 1,
-                            StartTime = new DateTime(2023, 2, 6, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2023, 2, 8, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 3
-                        });
-                });
-
-            modelBuilder.Entity("HairdresserBlazor.Entities.Hairdresser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Hairdressers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Driah Resser"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Yug Nolas"
                         });
                 });
 
@@ -138,6 +110,10 @@ namespace HairdresserBlazor.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -195,43 +171,9 @@ namespace HairdresserBlazor.Migrations
 
                     b.ToTable("AspNetUsers", (string)null);
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "330f4b2d-0ee9-499b-8548-6459f4719144",
-                            Email = "id0@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            Membership = 0,
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "89f5c381-0b88-4cb4-9adb-5b6e8bf9ad13",
-                            Email = "id1@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            Membership = 0,
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "2e6fd234-5387-4819-9dd9-d3aa5ed610ff",
-                            Email = "id2@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            Membership = 1,
-                            PhoneNumberConfirmed = false,
-                            TwoFactorEnabled = false
-                        });
+                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("HairdresserBlazor.Entities.UserRole", b =>
@@ -369,6 +311,16 @@ namespace HairdresserBlazor.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("HairdresserBlazor.Entities.Hairdresser", b =>
+                {
+                    b.HasBaseType("HairdresserBlazor.Entities.User");
+
+                    b.Property<double>("PayRate")
+                        .HasColumnType("float");
+
+                    b.HasDiscriminator().HasValue("Hairdresser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

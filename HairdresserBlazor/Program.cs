@@ -25,6 +25,7 @@ builder.Services.AddDbContextFactory<SalonDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<User>()
+	.AddRoles<UserRole>()
 	.AddEntityFrameworkStores<SalonDbContext>();
 
 builder.Services.AddRazorPages();
@@ -56,6 +57,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 app.MapBlazorHub();

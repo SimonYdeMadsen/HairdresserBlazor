@@ -3,16 +3,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace HairdresserBlazor.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatedFakeData : Migration
+    public partial class CleanTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    HairdresserId = table.Column<int>(type: "int", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -85,28 +99,6 @@ namespace HairdresserBlazor.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    HairdresserId = table.Column<int>(type: "int", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointments_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -195,41 +187,6 @@ namespace HairdresserBlazor.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Membership", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[,]
-                {
-                    { 1, 0, "7d6b4c36-eb5b-4293-8f44-00891bbe36ba", "id0@gmail.com", false, false, null, 0, null, null, null, null, false, null, false, null },
-                    { 2, 0, "47d264d4-fed0-4ab8-9bcf-5b87bc8b725c", "id1@gmail.com", false, false, null, 0, null, null, null, null, false, null, false, null },
-                    { 3, 0, "58e4d264-65e5-44b5-9e73-e0541e14492f", "id2@gmail.com", false, false, null, 1, null, null, null, null, false, null, false, null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Hairdressers",
-                columns: new[] { "Id", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Driah Resser" },
-                    { 2, "Yug Nolas" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Appointments",
-                columns: new[] { "Id", "EndTime", "HairdresserId", "StartTime", "UserId" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2023, 2, 21, 11, 0, 0, 0, DateTimeKind.Unspecified), 2, new DateTime(2023, 2, 21, 10, 30, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 2, new DateTime(2023, 2, 21, 12, 0, 0, 0, DateTimeKind.Unspecified), 2, new DateTime(2023, 2, 21, 11, 30, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 3, new DateTime(2023, 2, 21, 11, 0, 0, 0, DateTimeKind.Unspecified), 1, new DateTime(2023, 2, 21, 10, 30, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 4, new DateTime(2023, 2, 21, 8, 30, 0, 0, DateTimeKind.Unspecified), 1, new DateTime(2023, 2, 21, 8, 0, 0, 0, DateTimeKind.Unspecified), 3 }
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Appointments_UserId",
-                table: "Appointments",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

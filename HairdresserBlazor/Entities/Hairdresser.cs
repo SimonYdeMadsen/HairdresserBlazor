@@ -1,8 +1,7 @@
 ﻿namespace HairdresserBlazor.Entities
 {
-	public class Hairdresser
+	public class Hairdresser : User
 	{
-		public int Id { get; set; }
-		public string Name { get; set; }
+		public double PayRate { get; set; }
 	}
 }

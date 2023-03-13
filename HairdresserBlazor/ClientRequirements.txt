@@ -2,6 +2,9 @@
 - users need to be able to book 1-hour appointments separately. 
 - users to be able to specify the type of appointment they're making, eg hair-colouring.
 - users to not be able to book appointments in the past. 
+- employees to be able to manually add bookings, given (a duration) full name, a hairdresserId, and a timeslot. 
+- employees to be able to manually remove appointments that were cancelled over the phone. 
+- users to be able to book appointments without having to make an account. 
 
 
 Client found bugs...
@@ -14,3 +17,7 @@ Client found bugs...
 		- Filter duration of Appointment in question. 
 		- Use a HashSet
 
+
+Test if... 
+- multiple clients can connect properly simultaneously. 
+- site responds properly to booking concurrency conflicts regarding confirmation. 
