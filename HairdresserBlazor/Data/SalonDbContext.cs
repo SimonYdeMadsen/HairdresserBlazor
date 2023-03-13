@@ -20,38 +20,38 @@ namespace HairdresserBlazor.Data
 		{
 			base.OnModelCreating(modelBuilder);
 
-			// Create User data. 
-			modelBuilder.Entity<User>().HasData(new User
-			{
-				Id = 1,
-				Email = "id0@gmail.com",
-				Membership = User.MembershipType.Default
-			});
-			modelBuilder.Entity<User>().HasData(new User
-			{
-				Id = 2,
-				Email = "id1@gmail.com",
-				Membership = User.MembershipType.Default
-			});
-			modelBuilder.Entity<User>().HasData(new User
-			{
-				Id = 3,
-				Email = "id2@gmail.com",
-				Membership = User.MembershipType.Premium
-			});
+			//// Create User data. 
+			//modelBuilder.Entity<User>().HasData(new User
+			//{
+			//	Id = 1,
+			//	Email = "id0@gmail.com",
+			//	Membership = User.MembershipType.Default
+			//});
+			//modelBuilder.Entity<User>().HasData(new User
+			//{
+			//	Id = 2,
+			//	Email = "id1@gmail.com",
+			//	Membership = User.MembershipType.Default
+			//});
+			//modelBuilder.Entity<User>().HasData(new User
+			//{
+			//	Id = 3,
+			//	Email = "id2@gmail.com",
+			//	Membership = User.MembershipType.Premium
+			//});
 
 
-			// Create Hairdresser data.
-			modelBuilder.Entity<Hairdresser>().HasData(new Hairdresser
-			{
-				Id = 1,
-				Name = "Driah Resser"
-			});
-			modelBuilder.Entity<Hairdresser>().HasData(new Hairdresser
-			{
-				Id = 2,
-				Name = "Yug Nolas"
-			});
+			//// Create Hairdresser data.
+			//modelBuilder.Entity<Hairdresser>().HasData(new Hairdresser
+			//{
+			//	Id = 1,
+			//	Name = "Driah Resser"
+			//});
+			//modelBuilder.Entity<Hairdresser>().HasData(new Hairdresser
+			//{
+			//	Id = 2,
+			//	Name = "Yug Nolas"
+			//});
 
 
 			// Create Appointment data

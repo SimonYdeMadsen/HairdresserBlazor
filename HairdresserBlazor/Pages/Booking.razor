@@ -1,4 +1,6 @@
-﻿@if (hairdresserIds == null)
+﻿@page "/booking"
+
+@if (hairdresserIds == null)
 {
 	<LoadingHandler />
 }
@@ -19,6 +21,7 @@ else
 		{
 			<div>
 				<br />
+				<ChoiceView OnDurationChosen="DurationChanged" />
 				<Calendar HairdresserId="hairdresserId" Date="defaultCalendarDate" DurationInMinutes="DurationInMinutes"/>
 				<br />
 
@@ -34,8 +37,8 @@ else
 }
 
 @code {
-	[Parameter]
-	public int DurationInMinutes { get; set; }
+
+	private int DurationInMinutes;
 
 	[Inject]
 	public IHairdresserRepository HairdresserRepository { get; set; }

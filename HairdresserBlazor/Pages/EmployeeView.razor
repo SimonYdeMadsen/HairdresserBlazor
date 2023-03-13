@@ -1,0 +1,62 @@
+﻿@page "/employee"
+@attribute [Authorize(Roles = "Admin,Employee")]
+
+@if (hairdressers == null)
+{
+	<LoadingHandler/>
+}
+else{
+<h3>EmployeeView</h3>
+
+
+<p>UserName:</p>
+<input @bind="userName" type="text"/>
+
+<p>Hairdresser:</p>
+<select @bind="hairdresserId">
+	@foreach (var employee in hairdressers)
+	{
+		<option value="@employee.Id">@employee.UserName</option>
+	}
+	<button type="submit">Submit</button>
+</select>
+
+
+@* First a duration view
+	Then this view.
+	When calendar timeslot clicked, run function. Maybe assert that the two other fields are valid. 
+*@
+
+<ChoiceView/>
+
+
+}
+@code {
+	int hairdresserId;
+	string userName = "";
+	DateTime startTime;
+	DateTime endTime;
+
+	private IEnumerable<Hairdresser> hairdressers;
+
+	[Inject]
+	public IHairdresserRepository HairdresserRepository { get; set; }
+
+	[Inject]
+	public IUserHandler UserHandler { get; set; }
+
+	[Inject]
+	public IAppointmentRepository AppointmentRepository { get; set; }
+
+	protected async override Task OnInitializedAsync()
+	{
+		this.hairdressers = await this.HairdresserRepository.GetHairdressers();
+	}
+
+	private async void CreateAppointment()
+	{
+		int userId = await UserHandler.CreateUserAsync(userName);
+		await AppointmentRepository.AddAppointment(userId, hairdresserId, startTime, endTime);
+	}
+
+}

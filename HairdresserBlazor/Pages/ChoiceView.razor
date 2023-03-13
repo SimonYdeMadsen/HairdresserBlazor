@@ -1,21 +1,25 @@
-﻿@page "/booking"
+﻿
+<h3>Choose your service</h3>
 
-@if (dutationInMinutes == 0)
-{
-	<h3>Choose your service</h3>
-	<select @bind="dutationInMinutes">
-		<option value="20">Haircut: Man</option>
-		<option value="40">Haircut: Woman</option>
-		<option value="20">Color: Short</option>
-		<option value="40">Color: Long</option>
-	</select>
-}
-else
-{
-	<Booking DurationInMinutes="dutationInMinutes"></Booking>
-}
+<select @onchange="SetDuration">
+	<option value="20">Haircut: Man</option>
+	<option value="40">Haircut: Woman</option>
+	<option value="20">Color: Short</option>
+	<option value="40">Color: Long</option>
+</select>
+
 
 @code {
+	// For child->parent communication
+	public EventCallback<int> OnDurationChosen { get; set; }
 
-	public int dutationInMinutes;
+	private int durationInMinutes;
+
+
+
+	private void SetDuration(ChangeEventArgs e)
+	{
+		durationInMinutes = (int)e.Value;
+		OnDurationChosen.InvokeAsync(durationInMinutes);
+	}
 }

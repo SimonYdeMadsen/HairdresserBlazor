@@ -1,6 +1,6 @@
 ﻿namespace HairdresserBlazor.Entities
 {
-	public class Hairdresser
+	public class Hairdresser : User
 	{
 		public Hairdresser(string userName) : base(userName)
 		{
