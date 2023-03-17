@@ -20,9 +20,9 @@
 
 
 
-	private void SetDuration(ChangeEventArgs e)
+	private async Task SetDuration(ChangeEventArgs e)
 	{
 		durationInMinutes = Convert.ToInt32(e.Value);
-		OnDurationChosen.InvokeAsync(durationInMinutes);
+		await OnDurationChosen.InvokeAsync(durationInMinutes);
 	}
 }

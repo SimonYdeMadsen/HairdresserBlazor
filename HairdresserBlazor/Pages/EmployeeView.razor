@@ -40,9 +40,24 @@ else{
 		{
 		<DurationChoiceView OnDurationChosen="OnDurationChanged"/>
 		}
+		else if(dateChoice == default(DateTime))
+		{
+			<Calendar 
+				Date="DateTime.Now" 
+				DurationInMinutes="durationInMinutes" 
+				HairdresserId="hairdresserId"
+				UserId="userId"
+				OnDateChosen="OnDateChanged"
+			/>
+		}
 		else
 		{
-			<Calendar Date="DateTime.Now" DurationInMinutes="durationInMinutes" HairdresserId="hairdresserId"/>
+			<ConfirmationView
+				DateChoice="dateChoice"
+				DurationInMinutes="durationInMinutes"
+				HairdresserId="hairdresserId"
+				UserId="userId"
+			/>
 		}
 	</div>
 </div>
@@ -51,8 +66,6 @@ else{
 
 }
 @code {
-
-	private IEnumerable<Hairdresser> hairdressers;
 
 	[Inject]
 	public IHairdresserRepository HairdresserRepository { get; set; }
@@ -63,30 +76,33 @@ else{
 	[Inject]
 	public IAppointmentRepository AppointmentRepository { get; set; }
 
-	int hairdresserId;
-	string userName = "";
+	private IEnumerable<Hairdresser> hairdressers;
+
+	private string userName = $"guest{Random.Shared.Next()}";
+	private int hairdresserId;
+	private int userId;
 	private int durationInMinutes;
-	DateTime startTime;
-	DateTime endTime;
+	private DateTime dateChoice;
+
 
 	private bool isDurationSet = false;
 
 	protected async override Task OnInitializedAsync()
 	{
 		this.hairdressers = await this.HairdresserRepository.GetHairdressers();
-		hairdresserId = await UserHandler.GetCurrentUserId();
-		
+		hairdresserId = UserHandler.GetId(await UserHandler.GetCurrentUser());
+		userId = await UserHandler.CreateUser(userName);
 	}
 
-	private async void CreateAppointment()
-	{
-		int userId = await UserHandler.CreateUserAsync(userName);
-		await AppointmentRepository.AddAppointment(userId, hairdresserId, startTime, endTime);
-	}
 
 	private void OnDurationChanged(int duration)
 	{
 		durationInMinutes = duration;
 		isDurationSet = true;
+	}
+
+	private void OnDateChanged(DateTime date)
+	{
+		dateChoice = date;
 	}
 }

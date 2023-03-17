@@ -9,49 +9,70 @@ else
 	<div>
 		<h1>Booking</h1>
 		<br>
-		<h3>Choose your favorite hairdresser!</h3>
-		<br>
-		<br>
 	</div>
 
 
-
+	if (dateChoice == default(DateTime))
+	{
 	<div>
+		<h3>Choose your favorite hairdresser!</h3>
+		<br>
+		<br>
+
+		
 		@for (int j = 0; j < hairdresserIds.Count; j++)
 		{
 			int i = j; // Complains otherwise.
 			<div>
-				<br />
-				<p>Choose your service by the hands of @hairdresserNames[i]</p>
-				<DurationChoiceView  OnDurationChosen="OnDurationChanged"/>
-				<button @onclick="() => CalendarRenderStates[i] = true">Submit</button>
-				@if (CalendarRenderStates[i])
+				@if (!CalendarRenderStates[i])
 				{
-					<Calendar HairdresserId="hairdresserIds[i]" Date="defaultCalendarDate" DurationInMinutes="DurationInMinutes" />
+					<p>Choose your service by the hands of @hairdresserNames[i]</p>
+					<DurationChoiceView  OnDurationChosen="OnDurationChanged"/>
+					<button @onclick="() => UserChoseHairdresser(i)">Submit</button>
+				}
+				else
+				{
+					<Calendar 
+						HairdresserId="hairdresserIds[i]" 
+						Date="defaultCalendarDate" 
+						DurationInMinutes="DurationInMinutes" 
+						UserId="userId"
+						OnDateChosen="OnDateChanged"
+					/>
 					<br />
 				}
-
 			</div>
-
 		}
-
-
 	</div>
-
+	}
+	else
+	{
+		<ConfirmationView 
+			DurationInMinutes="DurationInMinutes" 
+			HairdresserId="hairdresserChoice"
+			UserId="userId"
+			DateChoice="dateChoice"
+		/>
+	}
 
 
 }
 
 @code {
 
-	private int DurationInMinutes;
-	private List<bool> CalendarRenderStates;
-
 	[Inject]
 	public IHairdresserRepository HairdresserRepository { get; set; }
 
-	private List<int> hairdresserIds;
+	[Inject]
+	public IUserHandler UserHandler { get; set; }
 
+	private int DurationInMinutes = Int32.MinValue;
+	private int userId = Int32.MinValue;
+	private int hairdresserChoice = Int32.MinValue;
+	private DateTime dateChoice;
+
+	private List<bool> CalendarRenderStates;
+	private List<int> hairdresserIds;
 	private List<string> hairdresserNames;
 
 	private DateTime defaultCalendarDate = DateTime.Today;
@@ -61,11 +82,23 @@ else
 		this.hairdresserIds = (await HairdresserRepository.GetHairdresserIds()).ToList();
 		this.hairdresserNames = (await HairdresserRepository.GetHairdresserNames(hairdresserIds)).ToList();
 
+		userId = UserHandler.GetId(await UserHandler.GetCurrentUser());
 		CalendarRenderStates = Enumerable.Repeat(false, hairdresserIds.Count).ToList();
+	}
+
+	private void UserChoseHairdresser(int id)
+	{
+		CalendarRenderStates[id] = true;
+		hairdresserChoice = id;
 	}
 
 	private void OnDurationChanged(int duration)
 	{
 		DurationInMinutes = duration;
+	}
+
+	private void OnDateChanged(DateTime date)
+	{
+		dateChoice = date;
 	}
 }

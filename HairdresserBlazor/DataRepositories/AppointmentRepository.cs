@@ -17,11 +17,9 @@ namespace HairdresserBlazor.DataRepositories
 			this.DbFactory = dbFactory;
 		}
 
-
-
 		public async Task<IEnumerable<Appointment>> GetHairdresserAppointments(int hairdresserId)
 		{
-			using var dbContext = DbFactory.CreateDbContext();
+            using var dbContext = DbFactory.CreateDbContext();
 			return await dbContext.Appointments
 				.Where(a => a.HairdresserId == hairdresserId)
 				.ToListAsync();
@@ -35,7 +33,7 @@ namespace HairdresserBlazor.DataRepositories
 				.FirstOrDefaultAsync();
 		}
 
-		public async Task<ICollection<Appointment>> GetUserAppointments(int userId)
+		public async Task<IEnumerable<Appointment>> GetUserAppointments(int userId)
 		{
 
 			// Might be slow to search through all appointments. Maybe add Collection in User?

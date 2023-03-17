@@ -1,6 +1,4 @@
-﻿
-
-@if (UserAppointments == null)
+﻿@if (Appointments == null)
 {
 	<LoadingHandler/>
 }
@@ -9,38 +7,21 @@ else
 	<h3>You have the follow appointments:</h3>
 
 	<ul>
-	@foreach (var app in UserAppointments)
-	{
+		@foreach (var app in Appointments)
+		{
 		
 		var minutes = (app.EndTime - app.StartTime).TotalMinutes;
 		<li><p>On @app.StartTime.Date.ToString("d"), at @app.StartTime.TimeOfDay, lasting @minutes minutes.</p></li>
-	}
+		}
 	</ul>
 }
 
 
 
 
-
-
-
 @code {
 
-	private int userId;
+	[Parameter]
+	public IEnumerable<Appointment> Appointments { get; set; }
 
-	private ICollection<Appointment> UserAppointments;
-
-	[Inject]
-	public IAppointmentRepository AppointmentRepository { get; set; }
-
-	[Inject]
-	public IUserHandler UserHandler { get; set; }
-
-	protected async override Task OnInitializedAsync()
-	{
-		userId = await UserHandler.GetCurrentUserId();
-		Console.WriteLine($"userId: {userId}");
-
-		UserAppointments = await AppointmentRepository.GetUserAppointments(userId);
-	}
 }

@@ -2,6 +2,8 @@
 using HairdresserBlazor.Entities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace HairdresserBlazor.Services
 {
@@ -14,22 +16,27 @@ namespace HairdresserBlazor.Services
 		private readonly AuthenticationStateProvider userProvider;
 		private readonly UserManager<User> userManager;
 
+
 		public UserHandler(AuthenticationStateProvider userProvider, UserManager<User> userManager)
 		{
 			this.userProvider = userProvider;
 			this.userManager = userManager;
+
 		}
 
-
-		public async Task<int> GetCurrentUserId()
+		public async Task<ClaimsPrincipal> GetCurrentUser()
 		{
-			var result = await userProvider.GetAuthenticationStateAsync();
-			var user = result.User;
+            var result = await userProvider.GetAuthenticationStateAsync();
+			return result.User;
+        }
+
+        public int GetId(ClaimsPrincipal user)
+		{
 			var id = int.Parse(userManager.GetUserId(user));
 			return id;
 		}
 
-		public async Task<int> CreateUserAsync(string userName)
+		public async Task<int> CreateUser(string userName)
 		{
 			var user = new User(userName);
 
@@ -38,6 +45,9 @@ namespace HairdresserBlazor.Services
 			{
 				throw new RequestFailedException("No user was created.");
 			}
+			/* Do I need to update the authorization state here? 
+			 Maybe not, because guest user never needs to sign-in. */
+
 			return user.Id;
 		}
 	}

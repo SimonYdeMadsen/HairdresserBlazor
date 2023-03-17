@@ -1,13 +1,9 @@
-﻿@implements IDisposable
-@if (hairdresserAppointments == null)
+﻿@if (hairdresserAppointments == null)
 {
 		<LoadingHandler/>
 }
 else
 {
-	<h3>Calendar of hairdresser @HairdresserId</h3>
-
-
 	<div class="container">
 		<div class="row">
 			<div class="col" style="text-align:left">
@@ -48,13 +44,13 @@ else
 			{
 				while (date.TimeOfDay > voidTracker)
 				{
-					<div>&nbsp;</div>
+							<button><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></button>
 					voidTracker = voidTracker.Add(new(0, timeslotIncrements, 0));
 				}
 				voidTracker = voidTracker.Add(new(0, timeslotIncrements, 0));
-				<a href="calendar/appointment/@HairdresserId/@DurationInMinutes" @onclick="() => StateContainer.Date = date">
+				<button @onclick="() => dateChoice = date">
 					<div style="text-align:center">@date.ToString("HH:mm")</div>
-				</a>
+				</button>
 			}
 			</div>
 			
@@ -64,11 +60,12 @@ else
 		
 	</div>
 
+	if (dateChoice != default(DateTime))
+	{
+		<h3>Confirm timeslot: @dateChoice</h3>
+		<button @onclick="() => SetDate()">Submit</button>
+	}
 	
-	
-	
-
-	<h3>User chose @StateContainer.Date </h3>
 	<h3>Current duration: @DurationInMinutes</h3>
 
 	<div>
@@ -86,6 +83,9 @@ else
 
 @code {
 	[Parameter]
+	public EventCallback<DateTime> OnDateChosen { get; set; }
+
+	[Parameter]
 	public int HairdresserId { get; set; }
 
 	[Parameter]
@@ -94,8 +94,9 @@ else
 	[Parameter]
 	public int DurationInMinutes { get; set; }
 
-	[Inject]
-	public DateStateContainer StateContainer { get; set; }
+	[Parameter]
+	public int UserId { get; set; }
+
 
 	[Inject]
 	public IAppointmentRepository AppointmentRepository { get; set; }
@@ -112,12 +113,13 @@ else
 
 	private TimeSpan startOfDay = new(8, 0, 0);
 
+	private DateTime dateChoice;
+
 	protected async override Task OnInitializedAsync()
 	{
 
 		await InitializeFields();
 
-		StateContainer.OnDateChosen += StateHasChanged;
 	}
 
 	private async Task InitializeFields()
@@ -173,7 +175,11 @@ else
 		return availableTimes;
 	}
 
-	
+	private async Task SetDate()
+	{
+		await OnDateChosen.InvokeAsync(dateChoice);
+	}
+
 
 	private bool IsCurrentWeek(DateTime date){
 		return CalendarUtility.GetWeekNumber(Date) == CalendarUtility.GetWeekNumber(DateTime.Today);
@@ -185,9 +191,4 @@ else
 		await InitializeFields();
 	}
 
-
-	public void Dispose()
-	{
-		StateContainer.OnDateChosen -= StateHasChanged;
-	}
 }

@@ -1,9 +1,13 @@
-﻿namespace HairdresserBlazor.Services
+﻿using System.Security.Claims;
+
+namespace HairdresserBlazor.Services
 {
 	public interface IUserHandler
 	{
-		Task<int> GetCurrentUserId();
+        Task<ClaimsPrincipal> GetCurrentUser();
 
-		Task<int> CreateUserAsync(string userName);
+        int GetId(ClaimsPrincipal user);
+
+        Task<int> CreateUser(string userName);
 	}
 }
