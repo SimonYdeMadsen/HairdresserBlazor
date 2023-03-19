@@ -1,0 +1,7 @@
+﻿.row div{
+    border: 5px solid black
+}
+
+.col div{
+    border: 5px solid red
+}

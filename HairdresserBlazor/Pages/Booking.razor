@@ -1,6 +1,6 @@
 ﻿@page "/booking"
 
-@if (hairdresserNames == null)
+@if (hairdresserIds == null)
 {
 	<LoadingHandler />
 }
@@ -18,30 +18,27 @@ else
 		<h3>Choose your favorite hairdresser!</h3>
 		<br>
 		<br>
-
-		
-		@for (int j = 0; j < hairdresserIds.Count; j++)
+		@foreach (int id in CalendarRenderStates.Keys)
 		{
-			int i = j; // Complains otherwise.
-			<div>
-				@if (!CalendarRenderStates[i])
-				{
-					<p>Choose your service by the hands of @hairdresserNames[i]</p>
-					<DurationChoiceView  OnDurationChosen="OnDurationChanged"/>
-					<button @onclick="() => UserChoseHairdresser(i)">Submit</button>
-				}
-				else
-				{
-					<Calendar 
-						HairdresserId="hairdresserIds[i]" 
-						Date="defaultCalendarDate" 
-						DurationInMinutes="DurationInMinutes" 
-						UserId="userId"
-						OnDateChosen="OnDateChanged"
-					/>
-					<br />
-				}
-			</div>
+		<div>
+			@if (CalendarRenderStates[id] == false)
+			{
+				<p>Choose your service by the hands of @namesDict[id].</p>
+				<DurationChoiceView  OnDurationChosen="OnDurationChanged"/>
+				<button @onclick='() => UserChoseHairdresser(id)'>Submit</button>
+			}
+			else
+			{
+				<Calendar 
+					HairdresserId="hairdresserIds.Dequeue()" 
+					Date="defaultCalendarDate" 
+					DurationInMinutes="DurationInMinutes" 
+					UserId="userId"
+					OnDateChosen="OnDateChanged"
+				/>
+				<br />
+			}
+		</div>
 		}
 	</div>
 	}
@@ -54,8 +51,6 @@ else
 			DateChoice="dateChoice"
 		/>
 	}
-
-
 }
 
 @code {
@@ -71,24 +66,36 @@ else
 	private int hairdresserChoice = Int32.MinValue;
 	private DateTime dateChoice;
 
-	private List<bool> CalendarRenderStates;
-	private List<int> hairdresserIds;
-	private List<string> hairdresserNames;
+	private Dictionary<int, bool> CalendarRenderStates = new();
+	private Queue<int> hairdresserIds;
+	private List<String> hairdresserNames;
+	private Dictionary<int, string> namesDict = new();
 
 	private DateTime defaultCalendarDate = DateTime.Today;
 
 	protected async override Task OnInitializedAsync()
 	{
-		this.hairdresserIds = (await HairdresserRepository.GetHairdresserIds()).ToList();
-		this.hairdresserNames = (await HairdresserRepository.GetHairdresserNames(hairdresserIds)).ToList();
+		var ids = (await HairdresserRepository.GetHairdresserIds()).ToList();
+		hairdresserIds = new Queue<int>(ids);
+		this.hairdresserNames = (await HairdresserRepository.GetHairdresserNames()).ToList();
+
+		for (int i = 0; i < hairdresserNames.Count; i++)
+		{
+			var id = ids[i];
+			namesDict.Add(id, hairdresserNames[i]);
+			CalendarRenderStates.Add(id, false);
+		}
 
 		userId = UserHandler.GetId(await UserHandler.GetCurrentUser());
-		CalendarRenderStates = Enumerable.Repeat(false, hairdresserIds.Count).ToList();
+
 	}
 
 	private void UserChoseHairdresser(int id)
 	{
-		CalendarRenderStates[id] = true;
+		if (CalendarRenderStates.TryGetValue(id, out _))
+		{
+			CalendarRenderStates[id] = true;
+		}
 		hairdresserChoice = id;
 	}
 

@@ -28,6 +28,7 @@ builder.Services.AddDefaultIdentity<User>()
 	.AddRoles<UserRole>()
 	.AddEntityFrameworkStores<SalonDbContext>();
 
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();

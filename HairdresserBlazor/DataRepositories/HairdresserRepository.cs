@@ -38,10 +38,14 @@ namespace HairdresserBlazor.DataRepositories
 				.SingleOrDefaultAsync();
 		}
 
-		public async Task<IEnumerable<string>> GetHairdresserNames(IEnumerable<int> hairdresserIds)
+		public async Task<IEnumerable<string>> GetHairdresserNames()
 		{
 			using var dbContext = DbFactory.CreateDbContext();
-			return await dbContext.Hairdressers.Select(h => h.UserName).ToListAsync();
+			var names = (await dbContext.Hairdressers
+				.Select(h => h.UserName)
+				.ToListAsync()
+				); 
+			return names;
 		}
 
 	}

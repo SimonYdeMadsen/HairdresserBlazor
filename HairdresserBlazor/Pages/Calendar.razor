@@ -117,9 +117,7 @@ else
 
 	protected async override Task OnInitializedAsync()
 	{
-
 		await InitializeFields();
-
 	}
 
 	private async Task InitializeFields()
@@ -140,7 +138,7 @@ else
 		{
 			for (DateTime d = day.AddHours(8); d < day.AddHours(16); d = d.AddMinutes(this.timeslotIncrements))
 			{
-				availableTimes.Add(d);
+				if (d > DateTime.Now) availableTimes.Add(d);
 			}
 		}
 		return availableTimes;

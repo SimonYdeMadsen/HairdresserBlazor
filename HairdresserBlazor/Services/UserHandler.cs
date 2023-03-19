@@ -27,11 +27,16 @@ namespace HairdresserBlazor.Services
 		public async Task<ClaimsPrincipal> GetCurrentUser()
 		{
             var result = await userProvider.GetAuthenticationStateAsync();
-			return result.User;
+			var user = result.User;
+			return user.Identity.IsAuthenticated ? user : null;
         }
 
         public int GetId(ClaimsPrincipal user)
 		{
+			if (user == null)
+			{
+				throw new ArgumentNullException(nameof(user));
+			}
 			var id = int.Parse(userManager.GetUserId(user));
 			return id;
 		}

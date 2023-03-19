@@ -6,25 +6,28 @@
 <br />
 
 <AuthorizeView>
-	<NotAuthorized>
-		<p><a href="Identity/Account/Login">Sign in</a> to view your appointments.</p>
-		<p><a href="Identity/Account/Register">Register</a> if you don't have an account.</p>
-	</NotAuthorized>
+    <NotAuthorized>
+        <p><a href="Identity/Account/Login">Sign in</a> to view your appointments.</p>
+        <p><a href="Identity/Account/Register">Register</a> if you don't have an account.</p>
+    </NotAuthorized>
 </AuthorizeView>
-
-<AuthorizeView Roles="Employee">
-	<DisplayAppointments Appointments="appointments"/>
-</AuthorizeView>
-<AuthorizeView Roles="User">
-    <DisplayAppointments Appointments="appointments"/>
-</AuthorizeView>
-<br />
-<br />
-<br />
-@if (debug && user is not null)
+<AuthorizeView>
+@if (appointments == null)
 {
-    @if (@user.IsInRole("Admin"))
-    {        
+    <LoadingHandler/>
+}
+else
+{
+    if (user.IsInRole("Employee"))
+    {
+        <DisplayAppointments Appointments="appointments"/>
+    }
+    else
+    {
+        <DisplayAppointments Appointments="appointments"/>
+    }
+    if (user.IsInRole("Admin"))
+    {
         <h3>@user.Identity.Name</h3>
         <div class="m-2 p-2">
             Is Authenticated: @user.Identity.IsAuthenticated
@@ -57,8 +60,7 @@
         </div>
     }
 }
-
-
+</AuthorizeView>
 @code{
     [CascadingParameter] 
     public Task<AuthenticationState> AuthTask { get; set; }
@@ -72,23 +74,27 @@
 
     private IEnumerable<Appointment> appointments;
 
-    private bool debug = true;
 
     protected async override Task OnInitializedAsync()
     {
         user = await UserHandler.GetCurrentUser();
-
-        int userId = UserHandler.GetId(user);
-        Console.WriteLine($"userId: {userId}");
-
-        if (user.IsInRole("User"))
+        if (user != null)
         {
-            appointments = await AppointmentRepository.GetUserAppointments(userId);
-        }
-        else if (user.IsInRole("Employee") || user.IsInRole("Admin"))
-        {
-            appointments = await AppointmentRepository.GetHairdresserAppointments(userId);
+            Console.WriteLine("user not null");
+            int userId = UserHandler.GetId(user);
+            Console.WriteLine($"userId: {userId}");
+            Console.WriteLine(user.Claims.ToString());
+
+            if (user.IsInRole("Employee") || user.IsInRole("Admin"))
+            {
+                appointments = await AppointmentRepository.GetHairdresserAppointments(userId);
+            }
+            else
+            {
+                appointments = await AppointmentRepository.GetUserAppointments(userId);
+            }
         }
     }
+
 }
 

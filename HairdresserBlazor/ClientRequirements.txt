@@ -1,11 +1,9 @@
 ﻿Client now wants...
 - users need to be able to book 40-minute appointments separately. ✔️
 - users to be able to specify the type of appointment they're making, eg hair-colouring. ✔️
-- employees to be able to manually add bookings, given (a duration) full name, a hairdresserId, and a timeslot. ✔️
-- employees to be able to manually remove appointments that were cancelled over the phone. 
+- employees to manually add bookings, given duration, name, hairdresserId, and a timeslot. ✔️
 - users to be able to book appointments without having to make an account. ✔️
-- users to not be able to book appointments in the past.
-
+- employees to be able to manually remove appointments that were cancelled over the phone. 
 
 Client found bugs...
 - If someone booked a 40-minute appointment at 08:00, others can book a 20-minute appointment starting at 08:20.
